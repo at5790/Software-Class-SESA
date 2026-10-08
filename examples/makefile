@@ -1,2 +1,2 @@
-PKG = states
+PKG = examples
 include ../common.mk

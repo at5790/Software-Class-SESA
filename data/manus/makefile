@@ -1,2 +1,2 @@
-PKG = data.manuscripts
+PKG = data.manus
 include ../../common.mk

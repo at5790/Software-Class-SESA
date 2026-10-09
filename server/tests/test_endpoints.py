@@ -37,3 +37,11 @@ def test_states():
     resp_json = resp.get_json()
     assert ep.STATE_RESP in resp_json
     assert isinstance(resp_json[ep.STATE_RESP], dict)
+
+# tests Campaign for required fields 
+def test_campaign_model_fields():
+    expected = {
+        'available_doses', 'mobile_units', 'max_sites',
+        'radius', 'objective'
+    }
+    assert set(ep.campaign_model.keys()) == expected

@@ -5,7 +5,7 @@ The endpoint called `endpoints` will return all available endpoints.
 # from http import HTTPStatus
 
 from flask import Flask  # , request
-from flask_restx import Resource, Api  # , fields  # Namespace
+from flask_restx import Resource, Api, fields  # Namespace
 from flask_cors import CORS
 
 # import werkzeug.exceptions as wz
@@ -15,6 +15,14 @@ import states.query as sqry
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
+
+campaign_model = api.model('Campaign', {
+    'available_doses': fields.Integer(required=True),
+    'mobile_units': fields.Integer(required=True),
+    'max_sites': fields.Integer(required=True),
+    'radius': fields.Float(required=True),
+    'objective': fields.String(required=True),
+})
 
 ENDPOINT_EP = '/endpoints'
 ENDPOINT_RESP = 'Available endpoints'

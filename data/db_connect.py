@@ -1,6 +1,13 @@
 """
 All interaction with MongoDB should be through this file!
 We may be required to use a new database at any point.
+
+Environment variables:
+    CLOUD_MONGO: "1" to use the cloud database, "0" (default) for local.
+    MONGO_URI: the full connection string for the cloud database,
+        e.g. mongodb+srv://<user>:<password>@<cluster-host>/
+        Required when CLOUD_MONGO is "1". Never commit it.
+    See .env.example in the repo root.
 """
 import os
 
@@ -8,6 +15,8 @@ import pymongo as pm
 
 LOCAL = "0"
 CLOUD = "1"
+
+MONGO_URI = 'MONGO_URI'
 
 SE_DB = 'seDB'
 
@@ -27,19 +36,28 @@ def connect_db():
     global client
     if client is None:  # not connected yet!
         print('Setting client because it is None.')
-        if os.environ.get('CLOUD_MONGO', LOCAL) == CLOUD:
-            password = os.environ.get('MONGO_PASSWD')
-            if not password:
-                raise ValueError('You must set your password '
+        # strip() so values sourced from a CRLF .env (which end in \r)
+        # still match instead of silently falling back to local
+        if os.environ.get('CLOUD_MONGO', LOCAL).strip() == CLOUD:
+            uri = os.environ.get(MONGO_URI, '').strip()
+            if not uri:
+                raise ValueError(f'You must set {MONGO_URI} '
                                  + 'to use Mongo in the cloud.')
             print('Connecting to Mongo in the cloud.')
-            client = pm.MongoClient(f'mongodb+srv://gcallah:{password}'
-                                    + '@koukoumongo1.yud9b.mongodb.net/'
-                                    + '?retryWrites=true&w=majority')
+            client = pm.MongoClient(uri)
         else:
             print("Connecting to Mongo locally.")
             client = pm.MongoClient()
     return client
+
+
+def get_collection(collection, db=SE_DB):
+    """
+    Return a collection, connecting to MongoDB first if needed.
+    Every function below goes through here, so callers never have to
+    remember to call connect_db() themselves.
+    """
+    return connect_db()[db][collection]
 
 
 def convert_mongo_id(doc: dict):
@@ -53,7 +71,7 @@ def create(collection, doc, db=SE_DB):
     Insert a single doc into collection.
     """
     print(f'{db=}')
-    return client[db][collection].insert_one(doc)
+    return get_collection(collection, db).insert_one(doc)
 
 
 def read_one(collection, filt, db=SE_DB):
@@ -61,7 +79,7 @@ def read_one(collection, filt, db=SE_DB):
     Find with a filter and return on the first doc found.
     Return None if not found.
     """
-    for doc in client[db][collection].find(filt):
+    for doc in get_collection(collection, db).find(filt):
         convert_mongo_id(doc)
         return doc
 
@@ -71,12 +89,13 @@ def delete(collection: str, filt: dict, db=SE_DB):
     Find with a filter and return on the first doc found.
     """
     print(f'{filt=}')
-    del_result = client[db][collection].delete_one(filt)
+    del_result = get_collection(collection, db).delete_one(filt)
     return del_result.deleted_count
 
 
 def update(collection, filters, update_dict, db=SE_DB):
-    return client[db][collection].update_one(filters, {'$set': update_dict})
+    return get_collection(collection, db).update_one(filters,
+                                                     {'$set': update_dict})
 
 
 def read(collection, db=SE_DB, no_id=True) -> list:
@@ -84,7 +103,7 @@ def read(collection, db=SE_DB, no_id=True) -> list:
     Returns a list from the db.
     """
     ret = []
-    for doc in client[db][collection].find():
+    for doc in get_collection(collection, db).find():
         if no_id:
             del doc[MONGO_ID]
         else:
@@ -103,7 +122,7 @@ def read_dict(collection, key, db=SE_DB, no_id=True) -> dict:
 
 def fetch_all_as_dict(key, collection, db=SE_DB):
     ret = {}
-    for doc in client[db][collection].find():
+    for doc in get_collection(collection, db).find():
         del doc[MONGO_ID]
         ret[doc[key]] = doc
     return ret

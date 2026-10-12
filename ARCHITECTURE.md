@@ -74,7 +74,7 @@ Requests come into `server/endpoints.py`, which calls the matching module. Only 
 | C. Access Analysis | Baseline access, underserved areas, which areas each candidate site reaches, before/after impact | `access/` |
 | D. Optimization | Picks candidate sites that add the most new coverage within the site, dose and capacity limits; greedy maximum coverage first | `optimizer/`, `deployments/` |
 | E. Routing, Scheduling & Simulation | Assigns chosen sites to mobile units, orders visits, respects operating windows and capacities, reruns scenarios | `routing/`, `simulation/` |
-| F. React Frontend & Maps | Campaign builder, CRUD screens, access map, results, before/after comparison, simulation controls | separate frontend repo |
+| F. React Frontend & Maps | Campaign builder, CRUD screens, access map, results, before/after comparison, simulation controls | `frontend/` |
 | G. Cache & Platform | In-memory cache for repeated calculations; make, pytest, flake8, GitHub Actions and PythonAnywhere setup | `access/cache`, `common.mk`, `makefile`, `.github/`, deploy scripts |
 
 Every backend package follows the layout of `states/`: a `query.py` with the logic, a `tests/` folder, and a makefile that includes `common.mk`. Packages that start from source data also have a `load.py` and a `raw_data/` folder.

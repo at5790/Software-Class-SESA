@@ -23,7 +23,7 @@ all_tests: FORCE
 	cd $(STATES_DIR); make tests
 	cd $(EXAMPLES_DIR); make tests
 	cd $(MANUS_DIR); make tests
-	# cd $(DB_DIR); make tests
+	cd $(DB_DIR); make tests
 
 dev_env: FORCE
 	pip install -r $(REQ_DIR)/requirements-dev.txt

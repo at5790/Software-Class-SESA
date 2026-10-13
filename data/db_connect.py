@@ -19,6 +19,8 @@ CLOUD = "1"
 MONGO_URI = 'MONGO_URI'
 
 SE_DB = 'seDB'
+# Database tests use this separate database, so they never touch real data.
+TEST_DB = 'seDB_test'
 
 client = None
 

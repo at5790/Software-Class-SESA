@@ -13,7 +13,6 @@ import data.db_connect as dbc
 CLOUD_URI = 'mongodb://127.0.0.1:27017/'
 CLOUD_ADDRESS = ('127.0.0.1', 27017)
 
-TEST_DB = 'seDB_test'
 TEST_COLLECTION = 'db_connect_tests'
 TEST_DOC = {'name': 'Test site', 'capacity': 100}
 
@@ -55,14 +54,14 @@ def not_connected(monkeypatch, no_client):
     """
     monkeypatch.setenv('CLOUD_MONGO', dbc.LOCAL)
     seeder = pm.MongoClient()
-    coll = seeder[TEST_DB][TEST_COLLECTION]
+    coll = seeder[dbc.TEST_DB][TEST_COLLECTION]
     coll.delete_many({})
     coll.insert_one(dict(TEST_DOC))
     yield
-    seeder[TEST_DB].drop_collection(TEST_COLLECTION)
+    seeder[dbc.TEST_DB].drop_collection(TEST_COLLECTION)
     seeder.close()
 
 
 def test_read_connects(not_connected):
     """read() connects on its own, without connect_db() being called first."""
-    assert dbc.read(TEST_COLLECTION, db=TEST_DB) == [TEST_DOC]
+    assert dbc.read(TEST_COLLECTION, db=dbc.TEST_DB) == [TEST_DOC]

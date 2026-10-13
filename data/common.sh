@@ -1,23 +1,19 @@
 #!/bin/sh
 # Some common shell stuff.
+# Run the scripts that use this from the data/ directory.
 
 echo "Importing from common.sh"
 
-DB=gamesDB
-USER=gcallah
-CONNECT_STR="mongodb+srv://koukoumongo1.yud9b.mongodb.net/"
+# Must match SE_DB in db_connect.py.
+DB=seDB
 if [ -z $DATA_DIR ]
 then
-    DATA_DIR=/Users/gcallah/Classes/demo-repo4/data
+    DATA_DIR=$(pwd)
 fi
 BKUP_DIR=$DATA_DIR/bkup
-EXP=/usr/local/bin/mongoexport
-IMP=/usr/local/bin/mongoimport
+EXP=mongoexport
+IMP=mongoimport
 
-if [ -z $MONGO_PASSWD ]
-then
-    echo "You must set MONGO_PASSWD in your env before running this script."
-    exit 1
-fi
-
-declare -a GameCollections=("games" "users")
+# Every collection in the app's database. A plain string rather than an
+# array, because /bin/sh on Ubuntu (dash) doesn't support arrays.
+COLLECTIONS="states counties areas vaccination_sites candidate_sites campaigns mobile_units deployments"

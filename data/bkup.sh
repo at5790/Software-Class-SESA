@@ -1,11 +1,18 @@
 #!/bin/sh
 # Script to backup production database to JSON files.
+# MONGO_URI must hold the cloud connection string (see .env.example).
 
 . ./common.sh
 
-for collection in ${GameCollections[@]}; do
+if [ -z "$MONGO_URI" ]
+then
+    echo "You must set MONGO_URI in your env before running this script."
+    exit 1
+fi
+
+for collection in $COLLECTIONS; do
     echo "Backing up $collection"
-    $EXP --collection=$collection --db=$DB --out=$BKUP_DIR/$collection.json $CONNECT_STR --username $USER --password $MONGO_PASSWD
+    $EXP --collection=$collection --db=$DB --out=$BKUP_DIR/$collection.json --uri="$MONGO_URI"
 done
 
 git add $BKUP_DIR/*.json

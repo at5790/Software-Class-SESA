@@ -1,9 +1,9 @@
 #!/bin/sh
-# Script to backup production database to JSON files.
+# Script to restore the JSON backups into the local database.
 
 . ./common.sh
 
-for collection in ${GameCollections[@]}; do
+for collection in $COLLECTIONS; do
     echo "Restoring $collection"
     $IMP --db=$DB --collection $collection --drop --file $BKUP_DIR/$collection.json
 done

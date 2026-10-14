@@ -1,0 +1,22 @@
+# REQUIRES MORE EDGE CASES 
+
+from unit_assignment import assign_sites
+
+UNITS = [
+    {"name": "Van 1", "dose_capacity": 100, "active": True},
+    {"name": "Van 2", "dose_capacity": 50, "active": True},
+    {"name": "Van 3", "dose_capacity": 500, "active": False},
+]
+
+def test_assign_sites_uses_capacity():
+    # every site fits in some van
+    allocations = {"A": 80, "B": 40, "C": 10}
+    assignments, unassigned = assign_sites(UNITS, allocations)
+    assert assignments == {"Van 1": ["A", "C"], "Van 2": ["B"]}
+    assert unassigned == []
+
+def test_inactive_unit_is_ignored():
+    # Van is big enough, but not active
+    assignments, unassigned = assign_sites(UNITS, {"A": 200})
+    assert unassigned == ["A"]
+    assert "Van 3" not in assignments

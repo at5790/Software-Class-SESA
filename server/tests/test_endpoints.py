@@ -9,6 +9,8 @@ from http.client import (
 
 from unittest.mock import patch
 
+from flask_restx import fields
+
 import pytest
 
 import server.endpoints as ep
@@ -49,3 +51,8 @@ def test_campaign_model_fields():
 def test_campaign_fields_required():
     for field in ep.campaign_model.values():
         assert field.required is True
+
+def test_campaign_field_types():
+    assert isinstance(ep.campaign_model['available_doses'], fields.Integer)
+    assert isinstance(ep.campaign_model['radius'], fields.Float)
+    assert isinstance(ep.campaign_model['objective'], fields.String)

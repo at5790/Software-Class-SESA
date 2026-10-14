@@ -45,3 +45,7 @@ def test_campaign_model_fields():
         'radius', 'objective'
     }
     assert set(ep.campaign_model.keys()) == expected
+
+def test_campaign_fields_required():
+    for field in ep.campaign_model.values():
+        assert field.required is True

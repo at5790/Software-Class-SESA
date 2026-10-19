@@ -29,3 +29,24 @@ def baseline_coverage(areas, providers, radius_km):
         "covered_population": served,
         "coverage_pct": round(100 * served / total, 2) if total else 0.0,
     }
+
+
+def area_access(area, providers, radius_km):
+    ids = providers_in_range(area["location"], providers, radius_km)
+    return {
+        "area_id": area["id"],
+        "has_access": len(ids) > 0,
+        "providers_in_range": ids,
+        "radius_km": radius_km,
+    }
+
+
+def nearest_provider(area, providers):
+    best = None
+    for p in providers:
+        if not p.get("active", True):
+            continue
+        d = distance_km(area["location"], p["location"])
+        if best is None or d < best["distance_km"]:
+            best = {"provider_id": p["id"], "distance_km": round(d, 3)}
+    return best

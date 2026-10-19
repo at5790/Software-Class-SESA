@@ -53,8 +53,16 @@ def not_connected(monkeypatch, no_client):
     the test itself makes one. Drops the collection afterwards.
     """
     monkeypatch.setenv('CLOUD_MONGO', dbc.LOCAL)
-    seeder = pm.MongoClient()
+    seeder = pm.MongoClient(serverSelectionTimeoutMS=500)
+
+    try:
+        seeder.admin.command('ping')
+    except pm.errors.ServerSelectionTimeoutError:
+        seeder.close()
+        pytest.skip('Local MongoDB server is not running')
+
     coll = seeder[dbc.TEST_DB][TEST_COLLECTION]
+
     coll.delete_many({})
     coll.insert_one(dict(TEST_DOC))
     yield

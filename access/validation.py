@@ -22,3 +22,4 @@ def check_valid_campaign(radius_km, max_sites, available_doses):
         raise OptimizationError(
             "available_doses must be a whole number >= 0.")
     return True
+

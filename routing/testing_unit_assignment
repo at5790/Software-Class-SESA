@@ -30,3 +30,22 @@ def test_site_too_big(sample_units):
     assignments, unassigned = assign_sites(sample_units, {"A": 101})
     assert assignments == {"Van 1": [], "Van 2": []}
     assert unassigned == ["A"]
+
+def test_exact_fit_is_allowed(sample_units):
+    # a site needing exactly the van's capacity still fits
+    assignments, unassigned = assign_sites(sample_units, {"A": 100})
+    assert assignments == {"Van 1": ["A"], "Van 2": []}
+    assert unassigned == []
+
+
+def test_zero_dose_site(sample_units):
+    # a site that needs 0 doses should still be assigned
+    assignments, unassigned = assign_sites(sample_units, {"A": 0})
+    assert assignments == {"Van 1": ["A"], "Van 2": []}
+    assert unassigned == []
+
+def test_no_units_at_all():
+    # an empty van list means every site is unassigned
+    assignments, unassigned = assign_sites([], {"A": 10})
+    assert assignments == {}
+    assert unassigned == ["A"]

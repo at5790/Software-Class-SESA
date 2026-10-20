@@ -1,22 +1,32 @@
 # REQUIRES MORE EDGE CASES 
-
+import copy
+import pytest
 from unit_assignment import assign_sites
 
-UNITS = [
-    {"name": "Van 1", "dose_capacity": 100, "active": True},
-    {"name": "Van 2", "dose_capacity": 50, "active": True},
-    {"name": "Van 3", "dose_capacity": 500, "active": False},
-]
+@pytest.fixture
+def sample_units():
+# creates new list of vans for each test where necessary
+    return [
+        {"name": "Van 1", "dose_capacity": 100, "active": True},
+        {"name": "Van 2", "dose_capacity": 50, "active": True},
+        {"name": "Van 3", "dose_capacity": 500, "active": False},
+    ]
 
-def test_assign_sites_uses_capacity():
+def test_assign_at_capacity(sample_units):
     # every site fits in some van
     allocations = {"A": 80, "B": 40, "C": 10}
     assignments, unassigned = assign_sites(UNITS, allocations)
     assert assignments == {"Van 1": ["A", "C"], "Van 2": ["B"]}
     assert unassigned == []
 
-def test_inactive_unit_is_ignored():
+def test_inactive_units(sample_units):
     # Van is big enough, but not active
     assignments, unassigned = assign_sites(UNITS, {"A": 200})
     assert unassigned == ["A"]
     assert "Van 3" not in assignments
+
+def test_site_too_big(sample_units):
+    # 101 doses is more than the biggest active van (100)
+    assignments, unassigned = assign_sites(sample_units, {"A": 101})
+    assert assignments == {"Van 1": [], "Van 2": []}
+    assert unassigned == ["A"]

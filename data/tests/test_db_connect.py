@@ -1,17 +1,17 @@
 """Tests for data/db_connect.py.
 
 These run against the local MongoDB server and a separate test database,
-so the app's real data is never touched. Cloud mode is tested by pointing
-MONGO_URI at the local server as 127.0.0.1, which tells it apart from
-local mode's default of 'localhost'.
+so the app's real data is never touched. Cloud mode is tested with a
+patched MongoClient, so it doesn't need a running server.
 """
+from unittest.mock import patch
+
 import pymongo as pm
 import pytest
 
 import data.db_connect as dbc
 
 CLOUD_URI = 'mongodb://127.0.0.1:27017/'
-CLOUD_ADDRESS = ('127.0.0.1', 27017)
 
 TEST_COLLECTION = 'db_connect_tests'
 TEST_DOC = {'name': 'Test site', 'capacity': 100}
@@ -29,11 +29,14 @@ def no_client(monkeypatch):
         dbc.client.close()
 
 
-def test_connect_cloud_uses_mongo_uri(monkeypatch, no_client):
+@patch('data.db_connect.pm.MongoClient')
+def test_connect_cloud_uses_mongo_uri(mock_client, monkeypatch, no_client):
     """Cloud mode connects to the server named in MONGO_URI."""
     monkeypatch.setenv('CLOUD_MONGO', dbc.CLOUD)
     monkeypatch.setenv(dbc.MONGO_URI, CLOUD_URI)
-    assert dbc.connect_db().address == CLOUD_ADDRESS
+    dbc.connect_db()
+    # fake client, so check it got the uri from MONGO_URI
+    mock_client.assert_called_once_with(CLOUD_URI)
 
 
 def test_connect_cloud_without_uri(monkeypatch, no_client):

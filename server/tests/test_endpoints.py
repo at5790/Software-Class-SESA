@@ -33,12 +33,17 @@ def test_endpoints():
     assert ep.HELLO_EP in resp_json[ep.ENDPOINT_RESP]
 
 
-def test_states():
+TEST_STATES = {'Test State': {'capital': 'Test City'}}
+
+
+# fake get_states so this only tests the endpoint itself
+@patch('states.query.get_states', return_value=TEST_STATES)
+def test_states(mock_get_states):
     resp = TEST_CLIENT.get(ep.STATES_EP)
     assert resp.status_code == OK
     resp_json = resp.get_json()
-    assert ep.STATE_RESP in resp_json
-    assert isinstance(resp_json[ep.STATE_RESP], dict)
+    assert resp_json[ep.STATE_RESP] == TEST_STATES
+    mock_get_states.assert_called_once()
 
 # tests Campaign for required fields 
 def test_campaign_model_fields():

@@ -24,6 +24,13 @@ campaign_model = api.model('Campaign', {
     'objective': fields.String(required=True),
 })
 
+mobile_unit_model = api.model("MobileUnit", {
+    'name': fields.String(required=True),
+    "dose_capacity": fields.Integer(required=True),
+    'active': fields.Boolean(required=True),
+    'operating_window':fields.String(required=True),
+})
+
 ENDPOINT_EP = '/endpoints'
 ENDPOINT_RESP = 'Available endpoints'
 HELLO_EP = '/hello'

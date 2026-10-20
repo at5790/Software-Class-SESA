@@ -11,3 +11,9 @@ npm run dev
 ```
 
 The app runs at http://localhost:5173.
+
+To run the tests:
+
+```
+npm test
+```

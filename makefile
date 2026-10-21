@@ -7,6 +7,7 @@ SEC_DIR = security
 STATES_DIR = states
 EXAMPLES_DIR = examples
 MANUS_DIR = data/manus
+GEO_DIR = geo
 REQ_DIR = .
 
 FORCE:
@@ -24,6 +25,7 @@ all_tests: FORCE
 	cd $(EXAMPLES_DIR); make tests
 	cd $(MANUS_DIR); make tests
 	cd $(DB_DIR); make tests
+	cd $(GEO_DIR); make tests
 
 dev_env: FORCE
 	pip install -r $(REQ_DIR)/requirements-dev.txt

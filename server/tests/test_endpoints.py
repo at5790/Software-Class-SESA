@@ -61,3 +61,7 @@ def test_campaign_field_types():
     assert isinstance(ep.campaign_model['available_doses'], fields.Integer)
     assert isinstance(ep.campaign_model['radius'], fields.Float)
     assert isinstance(ep.campaign_model['objective'], fields.String)
+
+def test_mobile_unit_model_fields():
+    expected = {'name', 'dose_capacity', 'active', 'operating_window'}
+    assert set(ep.mobile_unit_model.keys()) == expected

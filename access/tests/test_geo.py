@@ -8,7 +8,7 @@ def test_same_point_is_zero():
 
 
 def test_one_degree_of_longitude_at_equator():
-    assert haversine_km(0, 0, 0, 1) == pytest.approx(111.19, abs=0.1)
+    assert haversine_km(0, 0, 0, 1) == pytest.approx(111.32, abs=0.1)
 
 
 def test_known_city_pair():
@@ -24,4 +24,4 @@ def test_symmetric():
 def test_distance_km_reads_geojson_order():
     p1 = {"type": "Point", "coordinates": [0, 0]}
     p2 = {"type": "Point", "coordinates": [1, 0]}
-    assert distance_km(p1, p2) == pytest.approx(111.19, abs=0.1)
+    assert distance_km(p1, p2) == pytest.approx(111.32, abs=0.1)

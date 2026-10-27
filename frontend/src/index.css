@@ -43,3 +43,16 @@ main {
   margin: 0 auto;
   padding: 24px;
 }
+
+.api-status {
+  font-size: 14px;
+  color: #7b8794;
+}
+
+.api-status.connected {
+  color: #1a7f37;
+}
+
+.api-status.down {
+  color: #cf222e;
+}

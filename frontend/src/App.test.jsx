@@ -1,8 +1,17 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { expect, test } from 'vitest'
+import { afterEach, beforeEach, expect, test, vi } from 'vitest'
 import App from './App.jsx'
+
+// the header checks the backend, so give it a fetch that never answers
+beforeEach(() => {
+  vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {})))
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
 
 // render the app starting at the given url
 function renderAt(url) {

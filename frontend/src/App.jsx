@@ -3,6 +3,7 @@ import CampaignsPage from './pages/CampaignsPage.jsx'
 import SitesPage from './pages/SitesPage.jsx'
 import MapPage from './pages/MapPage.jsx'
 import ResultsPage from './pages/ResultsPage.jsx'
+import ApiStatus from './components/ApiStatus.jsx'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <NavLink to="/map">Map</NavLink>
           <NavLink to="/results">Results</NavLink>
         </nav>
+        <ApiStatus />
       </header>
       <main>
         <Routes>

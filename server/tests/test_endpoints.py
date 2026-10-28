@@ -76,3 +76,9 @@ def test_create_campaign():
 def test_mobile_unit_fields_required():
     for field in ep.mobile_unit_model.values():
         assert field.required is True
+
+def test_mobile_unit_field_types():
+    assert isinstance(ep.mobile_unit_model['name'], fields.String)
+    assert isinstance(ep.mobile_unit_model['dose_capacity'], fields.Integer)
+    assert isinstance(ep.mobile_unit_model['active'], fields.Boolean)
+    assert isinstance(ep.mobile_unit_model['operating_window'], fields.String)

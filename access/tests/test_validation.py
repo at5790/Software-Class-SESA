@@ -19,6 +19,8 @@ def test_zero_radius_raises():
 
 
 def test_text_radius_raises():
+    # "5" has quotes, so it is text, not the number 5.
+    # The radius must be a number, so the check raises OptimizationError.
     with pytest.raises(OptimizationError, match="radius_km"):
         check_valid_campaign(**good(radius_km="5"))
 

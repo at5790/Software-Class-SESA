@@ -2,7 +2,11 @@
 
 
 class OptimizationError(ValueError):
-    """Bad campaign input; the API should answer 400."""
+    """Raised when the input to the optimizer is wrong.
+
+    For example, a radius that is text instead of a number, or a negative
+    number of doses. It is a ValueError, so the API can answer 400.
+    """
 
 
 def is_number(val):

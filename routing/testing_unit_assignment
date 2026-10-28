@@ -61,3 +61,16 @@ def test_no_sites(sample_units):
     assignments, unassigned = assign_sites(sample_units, {})
     assert assignments == {"Van 1": [], "Van 2": []}
     assert unassigned == []
+
+def test_tied_vans_first_van_wins():
+    # two vans with equal room: the first one listed gets the first site
+    units = [
+        {"name": "Van 1", "dose_capacity": 100, "active": True},
+        {"name": "Van 2", "dose_capacity": 100, "active": True},
+    ]
+    assignments, unassigned = assign_sites(units, {"A": 10, "B": 10})
+    assert assignments == {"Van 1": ["A"], "Van 2": ["B"]}
+    assert unassigned == []
+
+
+

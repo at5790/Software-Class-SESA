@@ -72,3 +72,7 @@ def test_create_campaign():
                'radius': 100.0, 'objective': 'coverage'}
     response = TEST_CLIENT.post('/campaigns', json=payload)
     assert response.status_code == 201
+
+def test_mobile_unit_fields_required():
+    for field in ep.mobile_unit_model.values():
+        assert field.required is True

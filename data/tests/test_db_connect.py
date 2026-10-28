@@ -69,3 +69,13 @@ def not_connected(monkeypatch, no_client):
 def test_read_connects(not_connected):
     """read() connects on its own, without connect_db() being called first."""
     assert dbc.read(TEST_COLLECTION, db=dbc.TEST_DB) == [TEST_DOC]
+
+
+def test_create_many_then_drop(monkeypatch, no_client):
+    monkeypatch.setenv('CLOUD_MONGO', dbc.LOCAL)
+    docs = [dict(TEST_DOC), dict(TEST_DOC)]
+    
+    dbc.create_many(TEST_COLLECTION, docs, db=dbc.TEST_DB)
+    assert len(dbc.read(TEST_COLLECTION, db=dbc.TEST_DB)) == len(docs)
+    dbc.drop(TEST_COLLECTION, db=dbc.TEST_DB)
+    assert dbc.read(TEST_COLLECTION, db=dbc.TEST_DB) == []

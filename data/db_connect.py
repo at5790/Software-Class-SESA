@@ -76,6 +76,13 @@ def create(collection, doc, db=SE_DB):
     return get_collection(collection, db).insert_one(doc)
 
 
+def create_many(collection, docs, db=SE_DB):
+    """
+    Insert a list of docs into collection in one call.
+    """
+    return get_collection(collection, db).insert_many(docs)
+
+
 def read_one(collection, filt, db=SE_DB):
     """
     Find with a filter and return on the first doc found.
@@ -93,6 +100,13 @@ def delete(collection: str, filt: dict, db=SE_DB):
     print(f'{filt=}')
     del_result = get_collection(collection, db).delete_one(filt)
     return del_result.deleted_count
+
+
+def drop(collection, db=SE_DB):
+    """
+    Delete collection and everything in it, including its indexes.
+    """
+    get_collection(collection, db).drop()
 
 
 def update(collection, filters, update_dict, db=SE_DB):

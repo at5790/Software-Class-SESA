@@ -16,3 +16,12 @@ def coverage_matrix(candidates, areas_to_cover, radius_km):
         reach = reachable_areas(c, areas_to_cover, radius_km)
         matrix[c["id"]] = {a["id"] for a in reach}
     return matrix
+
+
+def candidate_coverage(candidate, areas_to_cover, radius_km):
+    reach = reachable_areas(candidate, areas_to_cover, radius_km)
+    return {
+        "candidate_id": candidate["id"],
+        "area_ids": [a["id"] for a in reach],
+        "reachable_population": sum(a["population"] for a in reach),
+    }

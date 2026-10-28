@@ -65,3 +65,10 @@ def test_campaign_field_types():
 def test_mobile_unit_model_fields():
     expected = {'name', 'dose_capacity', 'active', 'operating_window'}
     assert set(ep.mobile_unit_model.keys()) == expected
+
+@pytest.mark.skip(reason='Endpoint for campaign creation not implemented')
+def test_create_campaign():
+    payload = {'available_doses': 100, 'mobile_units': 5, 'max_sites': 5,
+               'radius': 100.0, 'objective': 'coverage'}
+    response = TEST_CLIENT.post('/campaigns', json=payload)
+    assert response.status_code == 201

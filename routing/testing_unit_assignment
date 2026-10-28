@@ -49,3 +49,15 @@ def test_no_units_at_all():
     assignments, unassigned = assign_sites([], {"A": 10})
     assert assignments == {}
     assert unassigned == ["A"]
+
+def test_no_active_units():
+    units = [{"name": "Van 1", "dose_capacity": 100, "active": False}]
+    assignments, unassigned = assign_sites(units, {"A": 10})
+    assert assignments == {}
+    assert unassigned == ["A"]
+
+def test_no_sites(sample_units):
+    # nothing to assign, so each active van gets an empty list
+    assignments, unassigned = assign_sites(sample_units, {})
+    assert assignments == {"Van 1": [], "Van 2": []}
+    assert unassigned == []

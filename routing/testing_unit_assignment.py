@@ -71,6 +71,3 @@ def test_tied_vans_first_van_wins():
     assignments, unassigned = assign_sites(units, {"A": 10, "B": 10})
     assert assignments == {"Van 1": ["A"], "Van 2": ["B"]}
     assert unassigned == []
-
-
-

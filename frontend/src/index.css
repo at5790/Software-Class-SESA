@@ -56,3 +56,15 @@ main {
 .api-status.down {
   color: #cf222e;
 }
+
+.sites-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sites-table th,
+.sites-table td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid #d9dee3;
+}

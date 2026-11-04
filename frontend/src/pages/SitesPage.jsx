@@ -5,11 +5,26 @@ function SitesPage() {
   return (
     <section>
       <h2>Sites</h2>
-      <ul>
-        {mockSites.map((site) => (
-          <li key={site.id}>{site.name}</li>
-        ))}
-      </ul>
+      <table className="sites-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Capacity</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mockSites.map((site) => (
+            <tr key={site.id}>
+              <td>{site.name}</td>
+              <td>{site.address}</td>
+              <td>{site.capacity}</td>
+              <td>{site.active ? 'Active' : 'Inactive'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </section>
   )
 }

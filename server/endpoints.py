@@ -17,11 +17,16 @@ CORS(app)
 api = Api(app)
 
 campaign_model = api.model('Campaign', {
-    'available_doses': fields.Integer(required=True),
-    'mobile_units': fields.Integer(required=True),
-    'max_sites': fields.Integer(required=True),
-    'radius': fields.Float(required=True),
-    'objective': fields.String(required=True),
+    'available_doses': fields.Integer
+    (required=True, description="Available vaccine doses"),
+    'mobile_units': fields.Integer
+    (required=True, description="Number of mobile units"),
+    'max_sites': fields.Integer
+    (required=True, description="Maximum deployment sites"),
+    'radius': fields.Float
+    (required=True, description="Service radius"),
+    'objective': fields.String
+    (required=True, description="Optimization objective"),
 })
 
 mobile_unit_model = api.model('MobileUnit', {

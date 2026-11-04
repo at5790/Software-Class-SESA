@@ -10,6 +10,7 @@ Environment variables:
     See .env.example in the repo root.
 """
 import os
+from functools import wraps
 
 import pymongo as pm
 
@@ -53,13 +54,23 @@ def connect_db():
     return client
 
 
+def require_db(fn):
+    """
+    Ensure a MongoDB connection exists before the decorated function runs.
+    """
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        connect_db()
+        return fn(*args, **kwargs)
+    return wrapper
+
+
+@require_db
 def get_collection(collection, db=SE_DB):
     """
-    Return a collection, connecting to MongoDB first if needed.
-    Every function below goes through here, so callers never have to
-    remember to call connect_db() themselves.
+    Return a collection, for callers that need to use it directly.
     """
-    return connect_db()[db][collection]
+    return client[db][collection]
 
 
 def convert_mongo_id(doc: dict):
@@ -68,58 +79,64 @@ def convert_mongo_id(doc: dict):
         doc[MONGO_ID] = str(doc[MONGO_ID])
 
 
+@require_db
 def create(collection, doc, db=SE_DB):
     """
     Insert a single doc into collection.
     """
     print(f'{db=}')
-    return get_collection(collection, db).insert_one(doc)
+    return client[db][collection].insert_one(doc)
 
 
+@require_db
 def create_many(collection, docs, db=SE_DB):
     """
     Insert a list of docs into collection in one call.
     """
-    return get_collection(collection, db).insert_many(docs)
+    return client[db][collection].insert_many(docs)
 
 
+@require_db
 def read_one(collection, filt, db=SE_DB):
     """
     Find with a filter and return on the first doc found.
     Return None if not found.
     """
-    for doc in get_collection(collection, db).find(filt):
+    for doc in client[db][collection].find(filt):
         convert_mongo_id(doc)
         return doc
 
 
+@require_db
 def delete(collection: str, filt: dict, db=SE_DB):
     """
     Find with a filter and return on the first doc found.
     """
     print(f'{filt=}')
-    del_result = get_collection(collection, db).delete_one(filt)
+    del_result = client[db][collection].delete_one(filt)
     return del_result.deleted_count
 
 
+@require_db
 def drop(collection, db=SE_DB):
     """
     Delete collection and everything in it, including its indexes.
     """
-    get_collection(collection, db).drop()
+    client[db][collection].drop()
 
 
+@require_db
 def update(collection, filters, update_dict, db=SE_DB):
-    return get_collection(collection, db).update_one(filters,
-                                                     {'$set': update_dict})
+    return client[db][collection].update_one(filters, {'$set': update_dict})
 
 
+@require_db
 def read(collection, db=SE_DB, no_id=True) -> list:
     """
     Returns a list from the db.
     """
     ret = []
-    for doc in get_collection(collection, db).find():
+    for doc in client[db][collection].find():
         if no_id:
             del doc[MONGO_ID]
         else:
@@ -136,9 +153,10 @@ def read_dict(collection, key, db=SE_DB, no_id=True) -> dict:
     return recs_as_dict
 
 
+@require_db
 def fetch_all_as_dict(key, collection, db=SE_DB):
     ret = {}
-    for doc in get_collection(collection, db).find():
+    for doc in client[db][collection].find():
         del doc[MONGO_ID]
         ret[doc[key]] = doc
     return ret

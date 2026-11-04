@@ -30,10 +30,14 @@ campaign_model = api.model('Campaign', {
 })
 
 mobile_unit_model = api.model('MobileUnit', {
-    'name': fields.String(required=True),
-    "dose_capacity": fields.Integer(required=True),
-    'active': fields.Boolean(required=True),
-    'operating_window': fields.String(required=True),
+    'name': fields.String(
+        required=True, description="Mobile unit name"),
+    "dose_capacity": fields.Integer(
+        required=True, description="Maximum vaccine doses"),
+    'active': fields.Boolean(
+        required=True, description="Whether unit is active"),
+    'operating_window': fields.String(
+        required=True, description="Operating schedule"),
 })
 
 ENDPOINT_EP = '/endpoints'

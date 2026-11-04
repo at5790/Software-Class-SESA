@@ -1,25 +1,39 @@
+"""
+Distances must agree with MongoDB, because some coverage checks run in
+Python and some run as MongoDB radius queries. So these tests compare
+geo.distance with MongoDB's own distances.
+"""
 import pytest
 
-from geo.distance import distance_km, haversine_km, km_to_meters
+import data.db_connect as dbc
+from geo.distance import distance_km, km_to_meters
 from geo.points import make_point
 
+COLLECTION = 'geo_distance_tests'
 
-def test_one_degree_of_longitude_at_equator():
-    assert haversine_km(0, 0, 0, 1) == pytest.approx(111.32, abs=0.01)
+# NYU Tandon, Brooklyn, NY.
+ORIGIN = make_point(40.6943708, -73.9865765)
 
-
-def test_pole_to_pole():
-    km = haversine_km(90, 0, -90, 0)
-    assert km == pytest.approx(20037.39, abs=0.01)   # pi * 6378.1
-
-
-def test_distance_km_reads_geojson_order():
-    # At latitude 60, a degree of longitude is about half as long as at
-    # the equator. Reading the coordinates in the wrong order would give
-    # about 111 km instead.
-    a, b = make_point(60, 0), make_point(60, 1)
-    assert distance_km(a, b) == pytest.approx(55.66, abs=0.01)
+# Points near and far, north and south, east and west of the origin.
+POINTS = [make_point(lat, lon)
+          for lat in (-60, 0, 40.7, 60, 89)
+          for lon in (-179, -74, -73.98, 0, 100)]
 
 
-def test_km_to_meters():
-    assert km_to_meters(5) == 5000
+@pytest.fixture
+def mongo_meters():
+    """MongoDB's distance in meters from ORIGIN to each of POINTS."""
+    coll = dbc.get_collection(COLLECTION, db=dbc.TEST_DB)
+    coll.drop()
+    coll.insert_many([{'i': i, 'location': p} for i, p in enumerate(POINTS)])
+    coll.create_index([('location', '2dsphere')])
+    rows = coll.aggregate([{'$geoNear': {
+        'near': ORIGIN, 'distanceField': 'meters', 'spherical': True}}])
+    meters = {row['i']: row['meters'] for row in rows}
+    yield [meters[i] for i in range(len(POINTS))]
+    coll.drop()
+
+
+def test_distances_match_mongodb(mongo_meters):
+    python_meters = [km_to_meters(distance_km(ORIGIN, p)) for p in POINTS]
+    assert python_meters == pytest.approx(mongo_meters)

@@ -22,3 +22,15 @@ def test_runs_out_midway():
 
 def test_zero_doses_selects_nothing():
     assert allocate_doses(PICKS, 0) == ([], 0)
+
+
+def test_capacity_caps_each_site():
+    caps = {"c1": 3000, "c3": 500, "c2": 3000}
+    allocated, left = allocate_doses(PICKS, 10000, caps)
+    assert [a["doses"] for a in allocated] == [3000, 500, 2000]
+    assert left == 4500
+
+
+def test_zero_capacity_site_is_skipped():
+    allocated, _ = allocate_doses(PICKS, 10000, {"c1": 0})
+    assert [a["site_id"] for a in allocated] == ["c3", "c2"]

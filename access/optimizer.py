@@ -23,3 +23,16 @@ def select_sites(matrix, pop_by_area, max_sites):
                       "gain": gain})
         covered |= new_ids
     return picks
+
+
+def allocate_doses(picks, available_doses):
+    """Each pick gets min(gain, doses left). Sites with 0 doses drop out."""
+    left = available_doses
+    allocated = []
+    for p in picks:
+        doses = min(p["gain"], left)
+        if doses <= 0:
+            continue
+        allocated.append(dict(p, doses=doses))
+        left -= doses
+    return allocated, left

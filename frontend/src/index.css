@@ -68,3 +68,17 @@ main {
   padding: 8px 12px;
   border-bottom: 1px solid #d9dee3;
 }
+
+.add-site-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.add-site-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}

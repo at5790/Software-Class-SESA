@@ -12,24 +12,28 @@ def sample_units():
         {"name": "Van 3", "dose_capacity": 500, "active": False},
     ]
 
+
 def test_assign_at_capacity(sample_units):
     # every site fits in some van
     allocations = {"A": 80, "B": 40, "C": 10}
-    assignments, unassigned = assign_sites(UNITS, allocations)
+    assignments, unassigned = assign_sites(sample_units, allocations)
     assert assignments == {"Van 1": ["A", "C"], "Van 2": ["B"]}
     assert unassigned == []
 
+
 def test_inactive_units(sample_units):
     # Van is big enough, but not active
-    assignments, unassigned = assign_sites(UNITS, {"A": 200})
+    assignments, unassigned = assign_sites(sample_units, {"A": 200})
     assert unassigned == ["A"]
     assert "Van 3" not in assignments
+
 
 def test_site_too_big(sample_units):
     # 101 doses is more than the biggest active van (100)
     assignments, unassigned = assign_sites(sample_units, {"A": 101})
     assert assignments == {"Van 1": [], "Van 2": []}
     assert unassigned == ["A"]
+
 
 def test_exact_fit_is_allowed(sample_units):
     # a site needing exactly the van's capacity still fits
@@ -44,11 +48,13 @@ def test_zero_dose_site(sample_units):
     assert assignments == {"Van 1": ["A"], "Van 2": []}
     assert unassigned == []
 
+
 def test_no_units_at_all():
     # an empty van list means every site is unassigned
     assignments, unassigned = assign_sites([], {"A": 10})
     assert assignments == {}
     assert unassigned == ["A"]
+
 
 def test_no_active_units():
     units = [{"name": "Van 1", "dose_capacity": 100, "active": False}]
@@ -56,11 +62,13 @@ def test_no_active_units():
     assert assignments == {}
     assert unassigned == ["A"]
 
+
 def test_no_sites(sample_units):
     # nothing to assign, so each active van gets an empty list
     assignments, unassigned = assign_sites(sample_units, {})
     assert assignments == {"Van 1": [], "Van 2": []}
     assert unassigned == []
+
 
 def test_tied_vans_first_van_wins():
     # two vans with equal room: the first one listed gets the first site
@@ -71,3 +79,4 @@ def test_tied_vans_first_van_wins():
     assignments, unassigned = assign_sites(units, {"A": 10, "B": 10})
     assert assignments == {"Van 1": ["A"], "Van 2": ["B"]}
     assert unassigned == []
+

@@ -15,6 +15,8 @@ def assign_sites(units, allocations):
 
     for site in allocations:
         doses = allocations[site]
+        if doses < 0:
+            raise ValueError("doses cannot be negative")
 
         # find the unit with the most room left
         best_unit = None

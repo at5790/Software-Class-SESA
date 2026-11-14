@@ -1,5 +1,6 @@
 from access.baseline import baseline_coverage, underserved_areas
 from access.coverage import coverage_matrix
+from access.validation import check_valid_campaign
 
 
 def marginal_gain(reach_ids, covered_ids, pop_by_area):
@@ -59,8 +60,9 @@ def impact_metrics(baseline, allocated, available_doses, doses_left):
 
 
 def optimize(campaign, areas, providers, candidates):
-    radius = campaign["radius_km"]
-    doses = campaign["available_doses"]
+    radius = campaign.get("radius_km")
+    doses = campaign.get("available_doses")
+    check_valid_campaign(radius, campaign.get("max_sites"), doses)
     under = underserved_areas(areas, providers, radius)
     matrix = coverage_matrix(candidates, under, radius)
     pop = {a["id"]: a["population"] for a in under}

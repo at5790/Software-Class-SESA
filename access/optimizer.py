@@ -38,3 +38,17 @@ def allocate_doses(picks, available_doses, capacity_by_site=None):
         allocated.append(dict(p, doses=doses))
         left -= doses
     return allocated, left
+
+
+def impact_metrics(baseline, allocated, available_doses, doses_left):
+    total = baseline["total_population"]
+    extra = sum(p["gain"] for p in allocated)
+    after = baseline["covered_population"] + extra
+    return {
+        "baseline_coverage_pct": baseline["coverage_pct"],
+        "post_coverage_pct": round(100 * after / total, 2) if total else 0.0,
+        "additional_population": extra,
+        "doses_allocated": available_doses - doses_left,
+        "doses_unused": doses_left,
+        "sites_selected": len(allocated),
+    }

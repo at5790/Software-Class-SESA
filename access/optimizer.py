@@ -1,3 +1,7 @@
+from access.baseline import baseline_coverage, underserved_areas
+from access.coverage import coverage_matrix
+
+
 def marginal_gain(reach_ids, covered_ids, pop_by_area):
     """Population newly reached: reach minus what is already covered."""
     return sum(pop_by_area[a] for a in reach_ids - covered_ids)
@@ -51,4 +55,21 @@ def impact_metrics(baseline, allocated, available_doses, doses_left):
         "doses_allocated": available_doses - doses_left,
         "doses_unused": doses_left,
         "sites_selected": len(allocated),
+    }
+
+
+def optimize(campaign, areas, providers, candidates):
+    radius = campaign["radius_km"]
+    doses = campaign["available_doses"]
+    under = underserved_areas(areas, providers, radius)
+    matrix = coverage_matrix(candidates, under, radius)
+    pop = {a["id"]: a["population"] for a in under}
+    picks = select_sites(matrix, pop, campaign["max_sites"])
+    caps = {c["id"]: c["capacity"] for c in candidates}
+    allocated, left = allocate_doses(picks, doses, caps)
+    baseline = baseline_coverage(areas, providers, radius)
+    return {
+        "campaign_id": campaign.get("id"),
+        "selected_sites": allocated,
+        "metrics": impact_metrics(baseline, allocated, doses, left),
     }

@@ -65,6 +65,8 @@ def optimize(campaign, areas, providers, candidates):
     check_valid_campaign(radius, campaign.get("max_sites"), doses)
     under = underserved_areas(areas, providers, radius)
     matrix = coverage_matrix(candidates, under, radius)
+    blocked = set(campaign.get("unavailable_site_ids", []))
+    matrix = {cid: ids for cid, ids in matrix.items() if cid not in blocked}
     pop = {a["id"]: a["population"] for a in under}
     picks = select_sites(matrix, pop, campaign["max_sites"])
     caps = {c["id"]: c["capacity"] for c in candidates}
@@ -75,3 +77,14 @@ def optimize(campaign, areas, providers, candidates):
         "selected_sites": allocated,
         "metrics": impact_metrics(baseline, allocated, doses, left),
     }
+
+
+SIM_KEYS = ("available_doses", "max_sites", "radius_km",
+            "unavailable_site_ids")
+
+
+def simulate(campaign, areas, providers, candidates, changes):
+    """Re-run optimize with changed constraints; inputs are not modified."""
+    scenario = dict(campaign)
+    scenario.update({k: v for k, v in changes.items() if k in SIM_KEYS})
+    return optimize(scenario, areas, providers, candidates)

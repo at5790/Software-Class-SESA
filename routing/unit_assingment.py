@@ -1,6 +1,5 @@
 # needs further review
 def assign_sites(units, allocations):
-    
     # Returns two things dict of unit name -> list of site names
     # and list of sites that no unit could take
 

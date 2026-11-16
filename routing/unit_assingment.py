@@ -26,7 +26,7 @@ def assign_sites(units, allocations):
             elif room_left[name] > room_left[best_unit]:
                 best_unit = name
 
-      if best_unit is None:
+        if best_unit is None:
             unassigned.append(site)
         elif room_left[best_unit] < doses:
             unassigned.append(site)

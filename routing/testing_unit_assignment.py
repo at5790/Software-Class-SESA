@@ -1,7 +1,7 @@
 # REQUIRES MORE EDGE CASES 
-import copy
 import pytest
 from unit_assignment import assign_sites
+
 
 @pytest.fixture
 def sample_units():

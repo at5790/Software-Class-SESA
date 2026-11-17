@@ -1,3 +1,4 @@
+import SelectedSitesTable from '../components/SelectedSitesTable.jsx'
 import mockResult from '../data/mockResult.js'
 
 // shows what the optimizer picked, using a mock result for now
@@ -23,6 +24,8 @@ function ResultsPage() {
           </div>
         ))}
       </div>
+      <h3>Selected sites</h3>
+      <SelectedSitesTable sites={mockResult.selected_sites} />
     </section>
   )
 }

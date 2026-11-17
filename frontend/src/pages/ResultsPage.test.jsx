@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import { expect, test } from 'vitest'
+import mockResult from '../data/mockResult.js'
 import ResultsPage from './ResultsPage.jsx'
 
 // the box that has this label
@@ -23,4 +24,11 @@ test('shows sites selected and doses', () => {
   expect(within(statFor('Sites selected')).getByText('3')).toBeTruthy()
   expect(within(statFor('Doses allocated')).getByText('900')).toBeTruthy()
   expect(within(statFor('Doses unused')).getByText('100')).toBeTruthy()
+})
+
+test('shows a table row for each selected site', () => {
+  render(<ResultsPage />)
+  for (const site of mockResult.selected_sites) {
+    expect(screen.getByRole('cell', { name: site.site_id })).toBeTruthy()
+  }
 })

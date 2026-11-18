@@ -40,6 +40,16 @@ mobile_unit_model = api.model('MobileUnit', {
         required=True, description="Operating schedule"),
 })
 
+
+def validate_campaign(data):
+    for field in ("available_doses", "mobile_units", "max_sites"):
+        if data.get(field, 0) < 0: 
+            return f'{field} cannot be negative'
+    if data.get("radius", 0) <= 0:
+        return "radius must be positive"
+    return None
+
+
 ENDPOINT_EP = '/endpoints'
 ENDPOINT_RESP = 'Available endpoints'
 HELLO_EP = '/hello'

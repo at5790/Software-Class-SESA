@@ -50,6 +50,16 @@ def validate_campaign(data):
     return None
 
 
+def validate_mobile_unit(data):
+    if not data.get("name"):
+        return "Mobile unit name is required"
+    if data.get("dose_capacity", 0) <= 0:
+        return "Dose capacity must be positive"
+    if not data.get("operating_window"):
+        return "Operating window is required"
+    return None
+
+
 ENDPOINT_EP = '/endpoints'
 ENDPOINT_RESP = 'Available endpoints'
 HELLO_EP = '/hello'

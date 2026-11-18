@@ -3,8 +3,8 @@
 Load the states into the states collection.
 
 The starter's raw_data/states.csv gives each state's code, name and location.
-Its FIPS code comes from the Census file raw_data/CenPop2020_Mean_ST.txt,
-kept exactly as downloaded, matched by state name.
+Its FIPS code comes from the Census file raw_data/census_states.txt,
+whose content is kept exactly as downloaded, matched by state name.
 
 Run from the repo root: python -m states.load
 """
@@ -17,7 +17,7 @@ from states.query import STATES_COLLECTION
 
 RAW_DATA = os.path.join(os.path.dirname(__file__), 'raw_data')
 STATES_CSV = os.path.join(RAW_DATA, 'states.csv')
-CENSUS_STATES = os.path.join(RAW_DATA, 'CenPop2020_Mean_ST.txt')
+CENSUS_STATES = os.path.join(RAW_DATA, 'census_states.txt')
 
 
 def read_census_fips(file_path=CENSUS_STATES):

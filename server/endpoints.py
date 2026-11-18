@@ -43,7 +43,7 @@ mobile_unit_model = api.model('MobileUnit', {
 
 def validate_campaign(data):
     for field in ("available_doses", "mobile_units", "max_sites"):
-        if data.get(field, 0) < 0: 
+        if data.get(field, 0) < 0:
             return f'{field} cannot be negative'
     if data.get("radius", 0) <= 0:
         return "radius must be positive"

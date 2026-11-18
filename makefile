@@ -8,6 +8,8 @@ STATES_DIR = states
 EXAMPLES_DIR = examples
 MANUS_DIR = data/manus
 GEO_DIR = geo
+COUNTIES_DIR = counties
+AREAS_DIR = areas
 REQ_DIR = .
 
 FORCE:
@@ -26,6 +28,8 @@ all_tests: FORCE
 	cd $(MANUS_DIR); make tests
 	cd $(DB_DIR); make tests
 	cd $(GEO_DIR); make tests
+	cd $(COUNTIES_DIR); make tests
+	cd $(AREAS_DIR); make tests
 
 dev_env: FORCE
 	pip install -r $(REQ_DIR)/requirements-dev.txt

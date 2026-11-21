@@ -46,7 +46,9 @@ def connect_db():
             if not uri:
                 raise ValueError(f'You must set {MONGO_URI} '
                                  + 'to use Mongo in the cloud.')
-            print('Connecting to Mongo in the cloud.')
+            # the first host, from after the password's '@'
+            host = uri.split('@')[-1].split('/')[0].split(',')[0]
+            print(f'Connecting to Mongo in the cloud: {host}')
             client = pm.MongoClient(uri)
         else:
             print("Connecting to Mongo locally.")

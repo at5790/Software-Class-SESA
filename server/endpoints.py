@@ -10,15 +10,11 @@ from flask_cors import CORS
 
 # import werkzeug.exceptions as wz
 
-import data.db_connect as dbc
 import states.query as sqry
 
 app = Flask(__name__)
 CORS(app)
 api = Api(app)
-
-# Connect at startup, so the server log shows which MongoDB it uses.
-dbc.connect_db()
 
 campaign_model = api.model('Campaign', {
     'available_doses': fields.Integer

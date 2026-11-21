@@ -51,7 +51,7 @@ def connect_db():
             print(f'Connecting to Mongo in the cloud: {host}')
             client = pm.MongoClient(uri)
         else:
-            print("Connecting to Mongo locally.")
+            print("Connecting to Mongo locally: localhost:27017")
             client = pm.MongoClient()
     return client
 

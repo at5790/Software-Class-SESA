@@ -35,3 +35,8 @@ def test_single_site():
     assert order_sites((0, 0), {"A": (9, 9)}) == ["A"]
 
 
+def test_sites_at_identical_coordinates():
+    sites = {"A": (1, 1), "B": (1, 1)}
+    assert order_sites((0, 0), sites) == ["A", "B"]
+
+

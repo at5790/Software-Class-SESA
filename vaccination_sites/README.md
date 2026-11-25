@@ -10,3 +10,5 @@ Raw data:
   Downloaded 2026-11-24 (dataset last updated 2026-11-23) from
   https://health.data.ny.gov/resource/keti-qx5t.csv?$select=mmis_id,npi,mmis_name,service_address,city,state,zip_code,county,latitude,longitude,updated&$where=profession_or_service='PHARMACY'&$limit=50000
   (saved as `keti-qx5t.csv`, renamed, not edited)
+
+To load: `python -m vaccination_sites.load`
